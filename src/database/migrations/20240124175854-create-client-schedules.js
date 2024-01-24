@@ -2,7 +2,7 @@
 /** @type {import('sequelize-cli').Migration} */
 module.exports = {
   async up(queryInterface, Sequelize) {
-    await queryInterface.createTable('delivery_requests', {
+    await queryInterface.createTable('client_schedules', {
       id: {
         allowNull: false,
         autoIncrement: true,
@@ -19,18 +19,20 @@ module.exports = {
         onDelete: "CASCADE",
         onUpdate: "CASCADE",
       },
-      pickupLocation: {
-        type: Sequelize.TEXT
+      scheduleId: {
+        type: Sequelize.INTEGER,
+        allowNull: false,
+        references: {
+          model: "driver-schedules",
+          key: "id",
+        },
+        onDelete: "CASCADE",
+        onUpdate: "CASCADE",
       },
-      dropoffLocation: {
-        type: Sequelize.TEXT
-      },
-      fareAmount: {
-        type: Sequelize.INTEGER
-      },
-      isApproved: {
-        type: Sequelize.BOOLEAN,
-        defaultValue:false
+      status: {
+        type: Sequelize.STRING,
+        allowNull: false,
+        defaultValue: "pending",
       },
       active: {
         type: Sequelize.BOOLEAN,
@@ -47,6 +49,6 @@ module.exports = {
     });
   },
   async down(queryInterface, Sequelize) {
-    await queryInterface.dropTable('delivery_requests');
+    await queryInterface.dropTable('client_schedules');
   }
 };

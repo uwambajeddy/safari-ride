@@ -3,14 +3,15 @@ const {
   Model
 } = require('sequelize');
 module.exports = (sequelize, DataTypes) => {
-  class delivery_rates extends Model {
+  class client_schedules extends Model {
     /**
      * Helper method for defining associations.
      * This method is not a part of Sequelize lifecycle.
      * The `models/index` file will call this method automatically.
      */
-    static associate({ deliveries }) {
-      this.belongsTo(deliveries, { foreignKey: "deliveryId", as: "delivery" });
+    static associate({ users,driver_schedules }) {
+      this.belongsTo(users, { foreignKey: "clientId", as: "client" });
+      this.belongsTo(driver_schedules, { foreignKey: "scheduleId", as: "schedule" });
     }
     toJSON() {
       return {
@@ -18,13 +19,12 @@ module.exports = (sequelize, DataTypes) => {
       };
     }
   }
-  delivery_rates.init({
-    rate: DataTypes.INTEGER,
-    review: DataTypes.TEXT,
+  client_schedules.init({
+    status: DataTypes.STRING,
     active: DataTypes.BOOLEAN
   }, {
     sequelize,
-    modelName: 'delivery_rates',
+    modelName: 'client_schedules',
   });
-  return delivery_rates;
+  return client_schedules;
 };

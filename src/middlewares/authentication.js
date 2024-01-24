@@ -13,7 +13,7 @@ import { get } from "lodash";
 import { generateAccessToken } from "../utils/authentication";
 import { userExtraInfo } from "../services/user.service";
 
-const { users, user_types, settings } = db;
+const { users, user_types } = db;
 const { driver } = systemUserTypes;
 
 const { badRequest, unAuthorized, forbidden } = statusCode;
@@ -88,14 +88,6 @@ export const protect = catchAsync(async (req, res, next) => {
         dataValues.driverInfo = driverInfo;
       }
 
-      const userSettings = await settings.findOne({
-        where: {
-          userId: dataValues.id
-        },
-        attributes: { exclude: ["createdAt", "updatedAt", "userId","active"] },
-      });
-
-      dataValues.settings = userSettings.dataValues
       req.decodedAccessToken = decoded;
       dataValues.password = undefined;
       req.currentUser = dataValues;
@@ -175,14 +167,6 @@ export const protect = catchAsync(async (req, res, next) => {
       dataValues.driverInfo = driverInfo;
     }
 
-    const userSettings = await settings.findOne({
-      where: {
-        userId: dataValues.id
-      },
-      attributes: { exclude: ["createdAt", "updatedAt", "userId","active"] },
-    });
-
-    dataValues.settings = userSettings.dataValues
 
     req.decodedAccessToken = decodedAccessToken;
     dataValues.password = undefined;
@@ -323,15 +307,9 @@ export const verifyCredentials = catchAsync(async (req, res, next) => {
         dataValues.driverInfo = driverInfo;
       }
 
-      const userSettings = await settings.findOne({
-        where: {
-          userId: dataValues.id
-        },
-        attributes: { exclude: ["createdAt", "updatedAt","userId", "active"] },
-      });
+
 
       dataValues.password = undefined;
-      dataValues.settings = userSettings.dataValues
 
       req.userType = dataValues.userType.name;
       req.foundUser = dataValues;

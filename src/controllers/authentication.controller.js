@@ -21,8 +21,6 @@ const { users,drivers } = db;
 const { hash } = bcryptjs;
 const accountSid = process.env.TWILIO_ACCOUNT_SID;
 const authToken = process.env.TWILIO_AUTH_TOKEN;
-const client = twilio(accountSid, authToken);
-const serviceId='VAe30e4ec193961a98a1bb32530c65816d'
 
 export const userLogin = catchAsync(async (req, res, next) => {
   const { foundUser, userType } = req;
@@ -102,12 +100,6 @@ export const verifyPhone = catchAsync(async (req, res, next) => {
   if (!result.valid)
     return next(new AppError(result.message, badRequest));
 
-  // const result =await client.verify.v2.services(serviceId)
-  //     .verificationChecks
-  //     .create({to: `+${phoneNumber}`, code})
-      
-  // console.log(result)
-  
   const user = await users.update(
     { isVerified: true },
     {
@@ -131,14 +123,6 @@ export const sendVerficationToken = catchAsync(async (req, res, next) => {
   if (!phoneNumber) {
     return next(new AppError(phoneNumberRequired, badRequest));
   }
-
-  const isVerified = await checkForeignData({
-    where: {
-      users: { phoneNumber,isVerified:true },
-    },
-  });
-  //TODO:use different
-  // if (isVerified.status) return next(new AppError(alreadyVerified, badRequest));
 
   const userExist = await users.findOne({
     where: {
