@@ -1,7 +1,7 @@
 {
-  "name": "gobi-api",
+  "name": "safariride",
   "version": "1.0.0",
-  "description": "Gobi backend using node express",
+  "description": "safari ride backend using node express",
   "main": "server.js",
   "directories": {
     "test": "tests"
@@ -22,14 +22,14 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/noza-tech/gobi-api.git"
+    "url": ""
   },
-  "author": "Uwambaje Eddy & Mugisha Abdoul",
+  "author": "Uwambaje Eddy ",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/noza-tech/gobi-api/issues"
+    "url": "https://github.com/safari-rides/issues"
   },
-  "homepage": "https://github.com/noza-tech/gobi-api#readme",
+  "homepage": "e",
   "devDependencies": {
     "@babel/cli": "^7.14.8",
     "@babel/compat-data": "^7.17.10",
