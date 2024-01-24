@@ -1,0 +1,29 @@
+{
+  "presets": [
+    [
+      "@babel/preset-env",
+      {
+        "targets": {
+          "node": "16"
+        }
+      }
+    ]
+  ],
+  "plugins": [
+    ["add-module-exports"],
+    [
+      "module-resolver",
+      {
+        "root": ["./src"]
+      }
+    ],
+    [
+      "@babel/plugin-transform-runtime",
+      {
+        "regenerator": true
+      }
+    ],
+    ["@babel/plugin-proposal-class-properties"],
+    "istanbul"
+  ]
+}
