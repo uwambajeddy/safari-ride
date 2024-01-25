@@ -23,7 +23,7 @@ module.exports = {
         type: Sequelize.INTEGER,
         allowNull: false,
         references: {
-          model: "driver-schedules",
+          model: "driver_schedules",
           key: "id",
         },
         onDelete: "CASCADE",

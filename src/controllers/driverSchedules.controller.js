@@ -8,7 +8,7 @@ import { temporaryDeleteForeignData } from "../services/deleteContent.service";
 import { findAllData, findData } from "../middlewares/contentChecker";
 import checkForeignData from "../services/checkForeignData";
 
-const { driver_schedules,drivers,users,vehicles,vehicle_types } = db;
+const { driver_schedules,drivers,users,vehicles,vehicle_types,client_schedules } = db;
 const { ok, created,forbidden,badRequest} = statusCode;
 const {
   notPermitted,noVehicle
@@ -59,7 +59,44 @@ export const updateSchedules = catchAsync(async (req, res,next) => {
 export const getSchedules = catchAsync(async (req, res, next) => {
 
   let where = {
-    where: { driver_schedules: { driverId: req.currentUser.driverInfo.id } }
+    where: { driver_schedules: { driverId: req.currentUser.driverInfo.id }, include: [
+      {
+        model: client_schedules,
+        as: "bookings",
+        include: [
+          {
+            model: users,
+            as: "client",
+            attributes: {
+              exclude: [
+                "userTypeId",
+                "passwordChangedAt",
+                "passwordResetToken",
+                "passwordResetExpires",
+                "verificationToken",
+                "updatedAt",
+                "password",
+                "createdAt",
+                "active"
+              ],
+            },
+          },
+          
+        ],
+        attributes: {
+          exclude: ["createdAt", "updatedAt", "active"
+          ]
+        },
+      },
+      {
+        model: vehicles,
+        as: "vehicle",
+        include: [{
+          model: vehicle_types,
+          as: "vehicleType"
+        },]
+      },
+    ], }
   }
   
   

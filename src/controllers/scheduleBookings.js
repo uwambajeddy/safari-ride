@@ -4,6 +4,7 @@ import db from "../database/models";
 import messages from "../utils/customMessages";
 import AppError from "../utils/appError";
 import { createNotification } from "../utils/notification";
+import { successResponse } from "../utils/responseHandlers";
 
 const { actionRequired } = messages;
 const { ok, badRequest } = statusCode;
@@ -14,25 +15,27 @@ export const driverBookingAction = catchAsync(async (req, res, next) => {
  const { action } = req.query;
 
  //TODO: not allow all drivers
-
  if (action == undefined || action != "true" && action != "false") return next(new AppError(actionRequired, badRequest));
- let booking = await client_schedules.update(
+ await client_schedules.update(
   {
    status: action,
   },
   {
-   where: { id, schedule },
-   returning: true,
-   plain: true,
+   where: { id }
 
-  },)
-
- action == "true" ?
-  await createNotification("Your ride request approved ✅", "Your ride request at has been approved!!", id, 99995)
-  : await createNotification("Your ride request Rejected ❌", "Your ride request has been rejected. You can find another scheduled trip!!", id, 99995)
- return successResponse(res, ok, booking);
+  },);
+ 
+ let getbooking = client_schedules.findByPk(id);
+ if (getbooking.clientId) {
+  
+  action == "true" ?
+  await createNotification("Your ride request approved ✅", "Your ride request at has been approved!!", getbooking.clientId, 99995)
+  : await createNotification("Your ride request Rejected ❌", "Your ride request has been rejected. You can find another scheduled trip!!", getbooking.clientId, 99995)
+ }
+ return successResponse(res, ok, getbooking); 
 
 });
+
 export const cancelRide = catchAsync(async (req, res, next) => {
  const userId = req.currentUser.id;
  const { id } = req.params;

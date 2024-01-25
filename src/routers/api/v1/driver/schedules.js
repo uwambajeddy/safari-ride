@@ -10,6 +10,7 @@ import {
   getSchedules,
   updateSchedules,
 } from "../../../../controllers/driverSchedules.controller.js";
+import { driverBookingAction } from "../../../../controllers/scheduleBookings.js";
 
 const router = express.Router();
 
@@ -25,6 +26,10 @@ router.patch(
   validate(validData.updateSchedule),
   findData("driver_schedules"),
   updateSchedules
+);
+router.patch(
+  "/booking/:id",
+  driverBookingAction
 );
 router.delete("/delete/:id", findData("driver_schedules"), deleteSchedules);
 
