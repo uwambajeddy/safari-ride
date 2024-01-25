@@ -11,7 +11,7 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate({ users,driver_schedules }) {
       this.belongsTo(users, { foreignKey: "clientId", as: "client" });
-      this.belongsTo(driver_schedules, { foreignKey: "scheduleId", as: "schedule" });
+      this.belongsTo(driver_schedules, { foreignKey: "driverScheduleId", as: "schedule" });
     }
     toJSON() {
       return {

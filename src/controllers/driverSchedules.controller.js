@@ -62,7 +62,7 @@ export const getSchedules = catchAsync(async (req, res, next) => {
     where: { driver_schedules: { driverId: req.currentUser.driverInfo.id }, include: [
       {
         model: client_schedules,
-        as: "bookings",
+        as: "client_schedules",
         include: [
           {
             model: users,

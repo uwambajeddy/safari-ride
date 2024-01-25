@@ -19,7 +19,7 @@ module.exports = {
         onDelete: "CASCADE",
         onUpdate: "CASCADE",
       },
-      scheduleId: {
+      driverScheduleId: {
         type: Sequelize.INTEGER,
         allowNull: false,
         references: {

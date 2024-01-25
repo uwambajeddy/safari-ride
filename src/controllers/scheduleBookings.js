@@ -5,10 +5,11 @@ import messages from "../utils/customMessages";
 import AppError from "../utils/appError";
 import { createNotification } from "../utils/notification";
 import { successResponse } from "../utils/responseHandlers";
+import { findAllData } from "../middlewares/contentChecker";
 
 const { actionRequired } = messages;
 const { ok, badRequest } = statusCode;
-const { client_schedules, driver_schedules, vehicle_types, vehicles } = db;
+const { client_schedules, driver_schedules, vehicle_types, vehicles,drivers, users } = db;
 
 export const driverBookingAction = catchAsync(async (req, res, next) => {
  const { id } = req.params;
@@ -16,21 +17,21 @@ export const driverBookingAction = catchAsync(async (req, res, next) => {
 
  //TODO: not allow all drivers
  if (action == undefined || action != "true" && action != "false") return next(new AppError(actionRequired, badRequest));
- await client_schedules.update(
+ let getbooking= await client_schedules.update(
   {
    status: action,
   },
   {
-   where: { id }
+   where: { id },
+   returning: true,
+      plain: true,
 
   },);
  
- let getbooking = client_schedules.findByPk(id);
- if (getbooking.clientId) {
-  
+ if (getbooking[1].clientId) {
   action == "true" ?
-  await createNotification("Your ride request approved ✅", "Your ride request at has been approved!!", getbooking.clientId, 99995)
-  : await createNotification("Your ride request Rejected ❌", "Your ride request has been rejected. You can find another scheduled trip!!", getbooking.clientId, 99995)
+  await createNotification("Your ride request approved ✅", "Your ride request at has been approved!!", getbooking[1].clientId, 99995)
+  : await createNotification("Your ride request Rejected ❌", "Your ride request has been rejected. You can find another scheduled trip!!", getbooking[1].clientId, 99995)
  }
  return successResponse(res, ok, getbooking); 
 
@@ -120,7 +121,7 @@ export const rideBooking = catchAsync(async (req, res, next) => {
  let booking = await client_schedules.create(
   {
    clientId: userId,
-   scheduleId: id,
+   driverScheduleId: id,
   })
 
  return successResponse(res, ok, booking);

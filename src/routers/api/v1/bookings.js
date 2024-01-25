@@ -7,5 +7,5 @@ const router = express.Router();
 
 router.get("/", getBooks, getData);
 router.patch("/cancel/:id", findData("client_schedules"), cancelRide);
-router.post("/book/:id", findData("driver_schedules"), rideBooking);
+router.post("/:id", findData("driver_schedules"), rideBooking);
 export default router;

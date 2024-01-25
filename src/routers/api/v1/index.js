@@ -19,7 +19,7 @@ apiRouter.use("/notifications", notifications);
 
 apiRouter.use(isUserVerified)
 apiRouter.use("/admin", admin);
-apiRouter.use("/bookings", bookings);
+apiRouter.use("/booking", bookings);
 apiRouter.use("/driver", drivers);
 
 export default apiRouter;
