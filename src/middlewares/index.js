@@ -8,9 +8,9 @@ import morgan from "morgan";
 import bodyParser from "body-parser";
 
 export default (app) => {
-  if (process.env.NODE_ENV === "development") {
-    app.use(morgan("dev"));
-  }
+  // if (process.env.NODE_ENV === "development") {
+  //   app.use(morgan("dev"));
+  // }
   app.use(requestMethods);
   app.use(compression());
   app.use(favicon("public/favicon.ico"));

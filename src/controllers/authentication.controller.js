@@ -211,7 +211,7 @@ export const verifyDriver = catchAsync(async (req, res, next) => {
 export const uploadDriverDocs = catchAsync(async (req, res, next) => {
   const { id, driverInfo, fullName } = req.currentUser;
   
-  if(driverInfo.isVerified === "true") return  next(new AppError(alreadyVerified, badRequest));
+  if (driverInfo.isVerified === "true") return next(new AppError(alreadyVerified, badRequest));
   if(!req.files['faceImage'] || !req.files['identityCard'] || ! req.files['driverLicence']) return  next(new AppError(fullDocsRequired, badRequest));
 
   let user;
@@ -222,30 +222,15 @@ export const uploadDriverDocs = catchAsync(async (req, res, next) => {
 
   const faceImage = await fileUpload(localFaceImage.path,"identity documents",next);
   const identityCard = await fileUpload(localIdentityCard.path,"identity documents",next);
-  const driverLicence = await fileUpload(localDriverLicence.path,"identity documents",next);
-
-  const verifyId = await verifyDocument(identityCard, faceImage);
-
-  if (!verifyId.isValid) {
-    if (verifyId.serverError) return next(new AppError(serverErrorMessage, serverError));
-    return next(new AppError(verifyId.error.message, badRequest))
-  };
-
-  const { sentDocument } = verifyId
-
-  let authentication_result = sentDocument['authentication'];
-  let face_result = sentDocument['face'];
-
-
-  if (face_result && authentication_result && authentication_result['score'] > 0.5 && face_result['isIdentical']) {
-
+  const driverLicence = await fileUpload(localDriverLicence.path, "identity documents", next);
+  
    user = await drivers.update(
       {
        isVerified: "pending",
         identityImage: identityCard,
         faceImage,
         driverLicenceImage: driverLicence,
-        identity: sentDocument,
+        identity: '',
         availabilityStatus: "available"
       },
       {
@@ -258,17 +243,8 @@ export const uploadDriverDocs = catchAsync(async (req, res, next) => {
     const admin = await users.findOne({where:{userTypeId:3}})
     await createNotification("Document uploaded 🚀","Your documents has been uploaded successfully and they are under review.",id,99995)
     await createNotification("Pending document verification 📄",`New driver document from ${fullName}`,admin.id,99995)
-  } else {
+  
 
-const faceImageName = faceImage.match(/\/v\d+\/([^/.]+)\./);
-const identityCardName = identityCard.match(/\/v\d+\/([^/.]+)\./);
-const driverLicenceName = driverLicence.match(/\/v\d+\/([^/.]+)\./);
-    await renameFile(faceImageName[1],`${id}_${faceImageName[1]}_error_${new Date}`.split(" ").slice(0,5).join(" "))
-    await renameFile(identityCardName[1],`${id}_${identityCardName[1]}_error_${new Date}`.split(" ").slice(0,5).join(" "))
-    await renameFile(driverLicenceName[1], `${id}_${driverLicenceName[1]}_error_${new Date}`.split(" ").slice(0, 5).join(" "))
-    
-    return next(new AppError(suspiciousDoc,badRequest))
-  }
 
 
   return successResponse(res, ok, user);

@@ -85,7 +85,7 @@ export const getSchedules = catchAsync(async (req, res, next) => {
         ],
         attributes: {
           exclude: ["createdAt", "updatedAt", "active"
-          ]
+          ] 
         },
       },
       {
@@ -96,7 +96,7 @@ export const getSchedules = catchAsync(async (req, res, next) => {
           as: "vehicleType"
         },]
       },
-    ], }
+    ], } 
   }
   
   
@@ -154,7 +154,75 @@ export const getAllSchedules = catchAsync(async (req, res, next) => {
 
 export const getSchedule = catchAsync(async (req, res, next) => {
   let where = {
-    where: { driver_schedules: { driverId: req.currentUser.driverInfo.id } }
+    where: {
+      driver_schedules: { driverId: req.currentUser.driverInfo.id },
+      include: [
+        {
+          model: client_schedules,
+          as: "client_schedules",
+          include: [
+            {
+              model: users,
+              as: "client",
+              attributes: {
+                exclude: [
+                  "userTypeId",
+                  "passwordChangedAt",
+                  "passwordResetToken",
+                  "passwordResetExpires",
+                  "verificationToken",
+                  "updatedAt",
+                  "password",
+                  "createdAt",
+                  "active"
+                ],
+              },
+            },
+            
+          ],
+          attributes: {
+            exclude: ["createdAt", "updatedAt", "active"
+            ]
+          },
+        },
+        {
+          model: drivers,
+          as: "driver",
+          include: [
+            {
+              model: users,
+              as: "user",
+              attributes: {
+                exclude: [
+                  "userTypeId",
+                  "passwordChangedAt",
+                  "passwordResetToken",
+                  "passwordResetExpires",
+                  "verificationToken",
+                  "updatedAt",
+                  "password",
+                  "createdAt",
+                  "active"
+                ],
+              },
+            },
+            
+          ],
+          attributes: {
+            exclude: ["createdAt", "updatedAt", "active", "identity","userId"
+            ]
+          },
+        },
+        {
+          model: vehicles,
+          as: "vehicle",
+          include: [{
+            model: vehicle_types,
+            as: "vehicleType"
+          },]
+        },
+      ],
+    }
   }
   
   return findData(where)(req, res, next);

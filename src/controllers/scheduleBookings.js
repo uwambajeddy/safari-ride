@@ -27,11 +27,10 @@ export const driverBookingAction = catchAsync(async (req, res, next) => {
       plain: true,
 
   },);
- 
- if (getbooking[1].clientId) {
+ if (getbooking[1].dataValues.clientId) {
   action == "true" ?
-  await createNotification("Your ride request approved ✅", "Your ride request at has been approved!!", getbooking[1].clientId, 99995)
-  : await createNotification("Your ride request Rejected ❌", "Your ride request has been rejected. You can find another scheduled trip!!", getbooking[1].clientId, 99995)
+  await createNotification("Request approved ✅", "Your ride request at has been approved!!", getbooking[1].clientId, 99995)
+  : await createNotification("Request Rejected ❌", "Your ride request has been rejected. You can find another scheduled trip!!", getbooking[1].clientId, 99995)
  }
  return successResponse(res, ok, getbooking); 
 

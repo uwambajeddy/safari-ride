@@ -17,7 +17,7 @@ apiRouter.use(protect)
 apiRouter.use("/profile", userProfile);
 apiRouter.use("/notifications", notifications);
 
-apiRouter.use(isUserVerified)
+// apiRouter.use(isUserVerified)
 apiRouter.use("/admin", admin);
 apiRouter.use("/booking", bookings);
 apiRouter.use("/driver", drivers);

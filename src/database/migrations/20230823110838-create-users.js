@@ -40,7 +40,7 @@ module.exports = {
       },
       isVerified: {
         type: Sequelize.BOOLEAN,
-        defaultValue: false,
+        defaultValue: true,
       },
       verificationToken: Sequelize.TEXT,
       password: Sequelize.STRING,

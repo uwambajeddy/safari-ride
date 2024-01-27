@@ -135,19 +135,6 @@ export const createUser = catchAsync(async (req, res, next) => {
       email
     });
 
-    if (userType == 2) {
-      user.driverInfo = await drivers.create({
-        userId: user.id
-      });
-      user.driverActivities = await driver_activities.create({
-        driverId: user.driverInfo.id
-      });
-    }
-
-    user.settings = await settings.create({
-      userId: user.id
-    });
-
   } else {
 
     if (!userExist.active) {
